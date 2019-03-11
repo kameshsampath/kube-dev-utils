@@ -1,5 +1,7 @@
 = Kubernetes Dev Utilities 
 :experimental:
+:git-repo-uri: https://github.com/kameshsampath/kube-dev-utils
+:git-revision: master
 
 A collection of scripts and utilities that can be applied to existing kubernetes setup for configuring various parts of the cluster
 
@@ -45,4 +47,4 @@ The scripts in this repo needs the following tools, which are used in the script
 
 == Utilities
 
-* Adding extra aliases to kubernetes node and add rules to  CoreDNS : link:./codredns/README.adoc[CoreDNS - Aliases and Update node hosts]
+* Adding extra aliases to kubernetes node and add rules to  CoreDNS : link:{git-repo-uri}/blob/{git-revision}/coredns/README.adoc[CoreDNS - Aliases and Update node hosts]

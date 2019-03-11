@@ -22,7 +22,7 @@ kubectl apply -f regitry-aliases-config.yaml
 
 == Dameonset Node Extra Hosts Update
 
-The daemonset is responsible for updating the node hosts e.g minikube to resolve the  registry names to default kubernetes registry.
+The daemonset is responsible for updating the node hosts e.g minikube to resolve the  registry names to default kubernetes registry. 
 
 [source,bash,subs="+macros,+attributes"]
 ----
@@ -42,4 +42,4 @@ kubectl -n kube-system get cm coredns -oyaml
 
 == Open Issues
 
-* The script currently can handle if the registry service name is changed from default. There is a open issue for the same.
+* https://github.com/kameshsampath/kube-dev-utils/issues/1[Issue-1] : The script currently can handle if the registry service name is changed from default. There is a open issue for the same.
