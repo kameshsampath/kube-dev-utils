@@ -1,0 +1,45 @@
+= Overview 
+
+The scripts in this repository aids in updating
+
+* Kubernetes node hosts for host entries to be resolved
+* Add aliases to the CoreDNS for default registry
+
+The aliases are very handy in test and development environments in resolving urls like `dev.local` or `example.com` to to the default kubernetes registry; thereby the developers can push images to the registry using url `dev.local/demo/myapp:1.0` which can the be resolvable for Kubernetes Deployments
+
+== Configmap Registry Aliases
+
+The config map has entry called `registryAliases` where you can add the list of registry names (dev/test) that needs to be resolved.
+
+`registry-svc` - holds the default minikube registry Kubernetes internal DNS
+
+IMPORTANT: Avoid using the real container registries here.
+
+[source,bash,subs="+macros,+attributes"]
+----
+kubectl apply -f regitry-aliases-config.yaml
+----
+
+== Dameonset Node Extra Hosts Update
+
+The daemonset is responsible for updating the node hosts e.g minikube to resolve the  registry names to default kubernetes registry.
+
+[source,bash,subs="+macros,+attributes"]
+----
+kubectl apply -f regitry-aliases-config.yaml
+----
+
+== Patching CoreDNS
+
+The CoreDNS need to be confgiured for aliases names from the `registryAliases` defined in **registry-aliases** configmap. Running the following script will do the necessary update to the CoreDNS configmap `coredns` with rewrite rules for aliases
+
+[source,bash,subs="+macros,+attributes"]
+----
+./patch-aliases-coredns.sh 
+# you can view the applied config using 
+kubectl -n kube-system get cm coredns -oyaml
+----
+
+== Open Issues
+
+* The script currently can handle if the registry service name is changed from default. There is a open issue for the same.
