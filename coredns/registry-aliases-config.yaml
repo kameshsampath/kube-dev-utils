@@ -6,7 +6,7 @@ data:
     ko.local
     example.com
   # default registry address in minikube
-  registry-svc: registry.kube-system.svc.cluster.local
+  registrySvc: registry.kube-system.svc.cluster.local
 kind: ConfigMap
 metadata:
   name: registry-aliases

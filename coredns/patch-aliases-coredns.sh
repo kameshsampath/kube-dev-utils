@@ -8,8 +8,8 @@ set -eu
 rm -f /tmp/coredns-alias-patch.yaml
 rm -f /tmp/coredns-alias-prepatch.yaml
 
-REGISTRY_ALIASES=$(kubectl get cm registry-aliases-config.yaml -n kube-system -oyaml | yq r - data.registryAliases)
-REGISTRY_SVC=$(kubectl get cm registry-aliases-config.yaml -n kube-system -oyaml | yq r - data.registrySvc) 
+REGISTRY_ALIASES=$(kubectl get cm registry-aliases -n kube-system -oyaml | yq r - data.registryAliases)
+REGISTRY_SVC=$(kubectl get cm registry-aliases -n kube-system -oyaml | yq r - data.registrySvc) 
 ALIASES_ENTRIES=""
 NL='\n'
 SPACES='  '
@@ -52,4 +52,4 @@ yq w -i /tmp/coredns-alias-patch.yaml data.Corefile $(cat  /tmp/coredns-alias-pa
 # echo "Patch to be applied"
 #cat  /tmp/coredns-alias-patch.yaml
 
-kubectl patch cm cm-patch-test --patch $(cat /tmp/coredns-alias-patch.yaml)
+kubectl patch cm coredns -n kube-system --patch $(cat /tmp/coredns-alias-patch.yaml)
