@@ -1,0 +1,22 @@
+---
+
+namespace: mongodb
+
+generatorOptions:
+    disableNameSuffixHash: true
+
+secretGenerator:
+  - name: mongodb-admin-secret
+    type: Opaque
+    literals:
+    - username=mongoadmin
+    - password=password
+  - name: mongo-express-secret
+    type: Opaque
+    literals:
+    - username=mongo
+    - password=mongo
+    - mongoServer=mongodb
+resources:
+  - service.yaml
+  - deployment.yaml
