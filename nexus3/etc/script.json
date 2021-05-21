@@ -1,0 +1,5 @@
+{
+	"name": "change-default-admin-passwd",
+	"type": "groovy",
+	"content": "security.securitySystem.changePassword('admin', args)"
+}

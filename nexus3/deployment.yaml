@@ -12,31 +12,62 @@ spec:
       labels:
         app: nexus
     spec:
+      securityContext:
+        fsGroup: 200
+      initContainers:
+        - name: nexus-etc-permission
+          image: busybox
+          command:
+            - sh
+            - -c 
+            - mkdir -p /nexus-data/etc && chown -R 200:200 /nexus-data/etc
+          volumeMounts:
+            - mountPath: /nexus-data
+              name: nexus-data
       containers:
         - name: nexus
-          image: docker.io/sonatype/nexus3
+          image: docker.io/sonatype/nexus3:3.30.1
           ports:
             - containerPort: 8081
               name: 8081-tcp
           livenessProbe:
             httpGet:
               path: /service/rest/v1/status
-              port: 8081
-            # nexus has lots of init to do first time so lets give
-            # more time for that to happen
-            initialDelaySeconds: 180
-            periodSeconds: 3
+              port: 8081-tcp
+            failureThreshold: 3
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /service/rest/v1/status
-              port: 8081
-            # nexus has lots of init to do first time so lets give
-            # more time for that to happen
-            initialDelaySeconds: 180
-            periodSeconds: 3
+              port: 8081-tcp
+            failureThreshold: 3
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /service/rest/v1/status
+              port: 8081-tcp
+            failureThreshold: 6
+            periodSeconds: 30
           volumeMounts:
             - name: nexus-data
               mountPath: /nexus-data
+            - name: nexus-properties
+              mountPath: /nexus-data/etc/nexus.properties
+              subPath: nexus.properties
+          resources:
+            limits:
+              memory: "2073Mi"
+              cpu: "2000m"
+            requests:
+              memory: "2073Mi"
+              cpu: "1000m"
       volumes:
         - name: nexus-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: nexus-data-claim
+        - name: nexus-properties
+          configMap:
+            name: nexus-properties
+            items:
+              - key: nexus.properties
+                path: nexus.properties
