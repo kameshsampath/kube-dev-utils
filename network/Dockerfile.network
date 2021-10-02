@@ -1,4 +1,8 @@
+FROM fullstorydev/grpcurl as grpcurl
+
 FROM alpine
+
+USER root
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
 
@@ -10,3 +14,14 @@ RUN apk upgrade \
     && pip3 install --upgrade pip setuptools httpie \
     && apk add --update --no-cache wget curl net-tools tcpdump iputils nmap arp-scan bind-tools \
     rm -rf /root/.cache
+
+COPY --from=grpcurl /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=grpcurl /etc/passwd /etc/passwd
+COPY --from=grpcurl /bin/grpcurl /bin/grpcurl
+
+# create non-privileged group and user
+RUN addgroup -S dev-user && adduser -S dev-user -G dev-user
+
+USER dev-user
+
+CMD ["/bin/sh","-c","tail","-f","/dev/null"]
