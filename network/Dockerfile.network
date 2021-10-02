@@ -1,0 +1,12 @@
+FROM alpine
+
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+
+LABEL org.opencontainers.image.source https://github.com/kameshsampath/kube-dev-utils
+
+RUN apk upgrade \
+    && apk update \
+    && apk add --update --no-cache py-pip \
+    && pip3 install --upgrade pip setuptools httpie \
+    && apk add --update --no-cache wget curl net-tools tcpdump iputils nmap arp-scan bind-tools \
+    rm -rf /root/.cache
