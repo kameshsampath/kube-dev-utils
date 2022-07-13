@@ -8,6 +8,7 @@ ARG TARGETARCH
 ARG HELM_VERSION=3.9.0
 ARG KUBECTL_VERSION=1.24.1
 ARG KUSTOMIZE_VERSION=v4.5.5
+ARG KIND_VERSION=v0.14.0
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -28,10 +29,13 @@ RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp
 # add helm-push
 RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-*
 
-# Install kubectl (same version of aws esk)
 RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl && \
     mv kubectl /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl
+
+RUN curl -sLO https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-${TARGETARCH} && \
+    mv kind-linux-${TARGETARCH} /usr/bin/kind && \
+    chmod +x /usr/bin/kind
 
 # Install kustomize (latest release)
 RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz && \
