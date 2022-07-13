@@ -9,6 +9,8 @@ ARG HELM_VERSION=3.9.0
 ARG KUBECTL_VERSION=1.24.1
 ARG KUSTOMIZE_VERSION=v4.5.5
 ARG KIND_VERSION=v0.14.0
+ARG KNATIVE_CLIENT_VERSION=v1.6.0
+ARG KNATIVE_QUICKSTART_VERSION=v1.5.1
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -36,6 +38,16 @@ RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBEC
 RUN curl -sLO https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-${TARGETARCH} && \
     mv kind-linux-${TARGETARCH} /usr/bin/kind && \
     chmod +x /usr/bin/kind
+
+# Knative
+RUN curl -sLO https://github.com/knative/client/releases/download/knative-${KNATIVE_CLIENT_VERSION}/kn-linux-${TARGETARCH} && \
+    mv kn-linux-${TARGETARCH} /usr/bin/kn && \
+    chmod +x /usr/bin/kn
+
+# Knative quickstart
+RUN curl -sLO https://github.com/knative-sandbox/kn-plugin-quickstart/releases/download/knative-${KNATIVE_QUICKSTART_VERSION}/kn-quickstart-linux-${TARGETARCH} && \
+    mv kn-quickstart-linux-${TARGETARCH} /usr/bin/kn-quickstart && \
+    chmod +x /usr/bin/kn-quickstart
 
 # Install kustomize (latest release)
 RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz && \
