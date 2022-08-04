@@ -16,7 +16,7 @@ ARG KNATIVE_QUICKSTART_VERSION=v1.5.1
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
 ENV TAR_FILE="helm-v${HELM_VERSION}-linux-${TARGETARCH}.tar.gz"
-RUN apk add --update --no-cache curl ca-certificates bash git && \
+RUN apk add --update --no-cache curl ca-certificates bash git docker docker-compose && \
     curl -sL ${BASE_URL}/${TAR_FILE} | tar -xvz && \
     mv linux-${TARGETARCH}/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \

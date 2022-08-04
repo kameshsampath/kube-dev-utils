@@ -19,6 +19,7 @@ push-tools: prepare-buildx ## Build & Upload extension image to hub. Do not push
 release:	
 	git tag "$(shell svu next)"
 	git push --tags
+	push-tools
 
 help: ## Show this help
 	@echo Please specify a build target. The choices are:
