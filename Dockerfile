@@ -55,6 +55,10 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
     mv kustomize /usr/bin/kustomize && \
     chmod +x /usr/bin/kustomize
 
+
+# Install httpie
+RUN apk add --update --no-cache httpie
+
 # Install jq
 RUN apk add --update --no-cache jq
 
