@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caddy
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: caddy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: caddy
+    spec:
+      volumes:
+        - name: caddy-config
+          persistentVolumeClaim:
+            claimName: caddy-config
+        - name: caddy-data
+          persistentVolumeClaim:
+            claimName: caddy-data
+        - name: caddy-config-file
+          configMap:
+            name: caddy-config
+            items:
+              - key: CaddyFile
+                path: /etc/caddy/Caddyfile
+      containers:
+      - name: caddy
+        image: docker.io/caddy
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: caddy-config-file
+            mountPath: /etc/caddy/Caddyfile
+          - name: caddy-config
+            mountPath: /config
+          - name: caddy-data
+            mountPath: /data
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443

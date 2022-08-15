@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-nexus
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      securityContext:
+        runAsUser: 200
+        fsGroup: 200
+      volumes:
+        - name: nexus-data
+          persistentVolumeClaim:
+            claimName: nexus-data
+      containers:
+        - name: nexus-config
+          image: docker.io/kameshsampath/nexus3-config:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: nexus3-config
+            - secretRef:
+                name: nexus3-config
+          volumeMounts:
+            - name: nexus-data
+              mountPath: /nexus-data
+      serviceAccountName: nexus
+      restartPolicy: Never

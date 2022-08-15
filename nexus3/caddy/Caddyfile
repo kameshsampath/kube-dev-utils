@@ -1,0 +1,11 @@
+nexus.localhost {
+    rewrite / /nexus
+	reverse_proxy http://nexus:8081 {
+		header_up Host {http.reverse_proxy.upstream.hostport}
+		header_up X-Forwarded-Host {host}
+	}
+	reverse_proxy /v2/* http://nexus:18081 {
+		header_up Host {upstream_hostport}
+		header_up X-Forwarded-Host {host}
+	}
+}

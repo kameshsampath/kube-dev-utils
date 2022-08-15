@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy
+  labels:
+    app.kubernetes.io/name: caddy
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: caddy
+  ports:
+    - port: 8080
+      nodePort: 30180
+      targetPort: http
+    - port: 8443
+      nodePort: 30143
+      targetPort: https

@@ -1,0 +1,17 @@
+
+commonLabels:
+  app.kubernetes.io/part-of: nexus3
+
+resources:
+  - "deployment.yaml"
+  - "pvc.yaml"
+  - "service.yaml"
+
+configMapGenerator:
+  - name: caddy-config
+    files:
+      - "Caddyfile"
+secretGenerator:
+  - name: nexus3-config
+    literals:
+      - "NEXUS_ADMIN_NEW_PASSWD=admin123"

@@ -1,0 +1,21 @@
+
+commonLabels:
+  app.kubernetes.io/part-of: nexus3
+
+resources:
+  - "deployment.yaml"
+  - "pvc.yaml"
+  - "service.yaml"
+  - "job.yaml"
+  - "rbac.yaml"
+  - "sa.yaml"
+
+configMapGenerator:
+  - name: nexus3-config
+    literals:
+      - "NEXUS_URL=http://nexus.default.svc.cluster.local:8081"
+      - "ANONYMOUS_ACCESS=false"
+secretGenerator:
+  - name: nexus3-config
+    literals:
+      - "NEXUS_ADMIN_NEW_PASSWD=admin123"
