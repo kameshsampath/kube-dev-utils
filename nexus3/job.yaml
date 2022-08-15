@@ -13,17 +13,36 @@ spec:
         - name: nexus-data
           persistentVolumeClaim:
             claimName: nexus-data
+        - name: nexus3-config-scripts
+          configMap:
+            name: nexus3-config-scripts
+        - name: nexus3-config-entrypoint
+          configMap:
+            name: nexus3-config-entrypoint
+            items:
+              - key: run.sh
+                path: run.sh
+                mode: 0755
       containers:
         - name: nexus-config
           image: docker.io/kameshsampath/nexus3-config:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
+          command: 
+            - bash
+          args:
+            - "-c"
+            - "/apps/scripts/run.sh"
           envFrom:
             - configMapRef:
                 name: nexus3-config
             - secretRef:
                 name: nexus3-config
           volumeMounts:
+            - name: nexus3-config-scripts
+              mountPath: /apps/config
             - name: nexus-data
               mountPath: /nexus-data
+            - name: nexus3-config-entrypoint
+              mountPath: /apps/scripts
       serviceAccountName: nexus
       restartPolicy: Never

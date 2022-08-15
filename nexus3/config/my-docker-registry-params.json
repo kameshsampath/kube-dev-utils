@@ -1,0 +1,5 @@
+{
+    "registryName": "my-registry",
+    "registryHttpPort": 18081,
+    "registryHttpsPort": null
+}

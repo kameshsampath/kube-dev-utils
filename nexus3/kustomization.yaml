@@ -15,6 +15,18 @@ configMapGenerator:
     literals:
       - "NEXUS_URL=http://nexus.default.svc.cluster.local:8081"
       - "ANONYMOUS_ACCESS=false"
+  - name: nexus3-config-scripts
+    files:
+      - "config/anonymous-access.json"
+      - "config/config.sh"
+      - "config/my-docker-registry-params.json"
+      - "config/my-docker-registry.json"
+      - "config/nexus.properties"
+      - "config/update-admin-password.json"
+  - name: nexus3-config-entrypoint
+    files:
+      - "run.sh"
+  
 secretGenerator:
   - name: nexus3-config
     literals:

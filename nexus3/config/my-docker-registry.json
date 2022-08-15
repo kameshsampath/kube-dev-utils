@@ -1,0 +1,5 @@
+{
+	"name": "my-docker-registry",
+	"type": "groovy",
+	"content": "import groovy.json.JsonSlurper;def req = new JsonSlurper().parseText(args);repository.createDockerHosted(req.registryName,req.registryHttpPort,req.registryHttpsPort);"
+}
