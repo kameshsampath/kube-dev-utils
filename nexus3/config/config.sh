@@ -136,8 +136,6 @@ function create_docker_registry() {
 
 wait_for_nexus
 
-# ensuring that the replicas are scaled down
-kubectl scale --replicas=0  -n "$NEXUS_NS" deployment "$NEXUS_DEPLOYMENT"
 
 if ! grep -qR 'nexus.scripts.allowCreation=true' /nexus-data/etc/nexus.properties
 then
@@ -145,13 +143,15 @@ then
   then
     echo "Scripting not enabled, enabling now."
     echo -n 'nexus.scripts.allowCreation=true' >> /nexus-data/etc/nexus.properties
+    # ensuring that the replicas are scaled down
+    kubectl scale --replicas=0  -n "$NEXUS_NS" deployment "$NEXUS_DEPLOYMENT"
+    kubectl scale --replicas=1  -n "$NEXUS_NS" deployment "$NEXUS_DEPLOYMENT"
   else
     echo "Cant write to file /nexus-data/etc/nexus.properties" 
     exit 1
   fi
 fi
 
-kubectl scale --replicas=1  -n "$NEXUS_NS" deployment "$NEXUS_DEPLOYMENT"
 
 wait_for_nexus
 is_api_ready
