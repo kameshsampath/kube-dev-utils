@@ -31,3 +31,5 @@ secretGenerator:
   - name: nexus3-config
     literals:
       - "NEXUS_ADMIN_NEW_PASSWD=admin123"
+      # used by applications like argocd
+      - "creds=admin:admin123"
