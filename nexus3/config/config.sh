@@ -126,11 +126,12 @@ function create_docker_registry() {
     admin_pwd="${NEXUS_ADMIN_PASSWD}"
   fi
 
-  if [ "200" == "$(run_script "$admin_pwd" 'my-docker-registry' "@${SCRIPT_DIR}/my-docker-registry-params.json")" ];
+  http_code="$(run_script "$admin_pwd" 'my-docker-registry' "@${SCRIPT_DIR}/my-docker-registry-params.json")"
+  if [ 200 -ne "$http_code"  ];
     then
       printf "\n Added default private docker registry \n"
     else
-      printf "\n Adding private docker registry failed \n"
+      printf "\n Adding private docker registry failed, Status Code %d \n" "$http_code"
   fi
 }
 
