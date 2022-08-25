@@ -71,6 +71,10 @@ RUN apk add --update --no-cache gettext
 # Install yq
 RUN apk add --update --no-cache yq
 
+# Instal Argo CD
+RUN curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 \
+   && chmod +x /usr/local/bin/argocd
+
 # Install kubens
 RUN curl -sL -o /usr/local/bin/kubens https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens \
   && chmod +x /usr/local/bin/kubens
