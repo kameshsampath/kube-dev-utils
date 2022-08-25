@@ -16,7 +16,7 @@ ARG KNATIVE_QUICKSTART_VERSION=v1.5.1
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
 ENV TAR_FILE="helm-v${HELM_VERSION}-linux-${TARGETARCH}.tar.gz"
-RUN apk add --update --no-cache curl ca-certificates bash git docker docker-compose && \
+RUN apk add --update --no-cache curl ca-certificates bash git docker docker-compose direnv && \
     curl -sL ${BASE_URL}/${TAR_FILE} | tar -xvz && \
     mv linux-${TARGETARCH}/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
@@ -79,8 +79,12 @@ RUN curl -sL -o /usr/local/bin/kubens https://raw.githubusercontent.com/ahmetb/k
 RUN curl -sL -o /usr/local/bin/kubectx https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx \
   && chmod +x /usr/local/bin/kubectx
 
+# Install k3d
+RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
 WORKDIR /apps
 
-RUN mkdir -p /apps/.kube
+RUN mkdir -p /apps/.kube \
+    && echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
 
 ENV KUBECONFIG=/apps/.kube/config
