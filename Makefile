@@ -13,11 +13,11 @@ build-tools: ## Build tools image locally
 	docker build --tag=$(IMAGE):$(TAG) -f $(DOCKER_FILE) .
 	docker tag $(IMAGE):$(TAG) $(IMAGE):$(TAG)
 
-push-tools: prepare-buildx ## Build & Upload extension image to hub. Do not push if tag already exists: TAG=$(svu c) make push-extension
-	docker pull $(IMAGE):$$(svu patch) && echo "Failure: Tag already exists" || docker buildx build --push --builder=$(BUILDER) --platform=linux/amd64,linux/arm64 --build-arg TAG=$$(svu patch) --tag=$(IMAGE):$$(svu patch) --tag=$(IMAGE):latest -f $(DOCKER_FILE) .
+push-tools: prepare-buildx ## Build & Upload extension image to hub. Do not push if tag already exists: TAG=$(svu patch) make push-extension
+	docker pull $(IMAGE):$(TAG) && echo "Failure: Tag already exists" || docker buildx build --push --builder=$(BUILDER) --platform=linux/amd64,linux/arm64 --build-arg TAG=$$(svu patch) --tag=$(IMAGE):$(TAG) --tag=$(IMAGE):latest -f $(DOCKER_FILE) .
 
 release:	
-	git tag $$(svu patch)
+	git tag $(TAG)
 	git push --tags
 
 help: ## Show this help
