@@ -1,0 +1,104 @@
+---
+kind: pipeline
+type: docker
+name: "Create Release"
+
+trigger:
+  branch:
+    - main
+
+steps:
+  - name: release-please
+    image: docker.io/kameshsampath/drone-github-release-please:v0.0.2
+    pull: if-not-exists
+    settings:
+      github_token:
+        from_secret: github_token
+      extra_options: |
+        release-type: simple
+        bump-patch-for-minor-pre-major: true
+    when:
+      event:
+        - push
+---
+kind: pipeline
+type: docker
+name: "Release Docker Image(amd64)"
+
+trigger:
+  event:
+    - tag
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: publish
+    image: plugins/docker:20.13
+    settings:
+      auto_tag: true
+      auto_tag_suffix: linux-amd64
+      dockerfile: docker/Dockerfile.linux.amd64
+      build_args_from_env: "DRONE_TAG"
+      registry:
+        from_secret: image_registry
+      repo:
+        from_secret: destination_image
+      username:
+        from_secret: image_registry_username
+      password:
+        from_secret: image_registry_password
+---
+kind: pipeline
+type: docker
+name: "Release Docker Image(arm64)"
+
+trigger:
+  event:
+    - tag
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: publish
+    image: plugins/docker:20.13
+    settings:
+      auto_tag: true
+      auto_tag_suffix: linux-arm64
+      dockerfile: docker/Dockerfile.linux.arm64
+      build_args_from_env: "DRONE_TAG"
+      registry:
+        from_secret: image_registry
+      repo:
+        from_secret: destination_image
+      username:
+        from_secret: image_registry_username
+      password:
+        from_secret: image_registry_password
+---
+kind: pipeline
+type: docker
+name: "Publish Manifest"
+
+depends_on:
+  - "Release Docker Image(arm64)"
+  - "Release Docker Image(amd64)"
+
+trigger:
+  event:
+  - tag
+
+steps:
+- name: publish
+  image: plugins/manifest:1.2
+  settings:
+    auto_tag: true
+    ignore_missing: true
+    spec: docker/manifest.tmpl
+    username:
+      from_secret: image_registry_username
+    password:
+      from_secret: image_registry_password

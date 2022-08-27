@@ -2,23 +2,10 @@ IMAGE?=kameshsampath/kube-dev-tools
 TAG?=latest
 SHELL := bash
 CURRENT_DIR = $(shell pwd)
-ENV_FILE := $(CURRENT_DIR)/.env
-BUILDER=buildx-multi-arch
-DOCKER_FILE=$(CURRENT_DIR)/Dockerfile
-
-prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
-	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host
+ENV_FILE := $(CURRENT_DIR)/.envrc
 
 build-tools: ## Build tools image locally
-	docker build --tag=$(IMAGE):$(TAG) -f $(DOCKER_FILE) .
-	docker tag $(IMAGE):$(TAG) $(IMAGE):$(TAG)
-
-push-tools: prepare-buildx ## Build & Upload extension image to hub. Do not push if tag already exists: TAG=$(svu patch) make push-extension
-	docker pull $(IMAGE):$(TAG) && echo "Failure: Tag already exists" || docker buildx build --push --builder=$(BUILDER) --platform=linux/amd64,linux/arm64 --build-arg TAG=$$(svu patch) --tag=$(IMAGE):$(TAG) --tag=$(IMAGE):latest -f $(DOCKER_FILE) .
-
-release:	
-	git tag $(TAG)
-	git push --tags
+	@drone exec .drone.local.yml
 
 help: ## Show this help
 	@echo Please specify a build target. The choices are:
