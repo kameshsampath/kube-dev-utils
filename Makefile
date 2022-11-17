@@ -5,7 +5,10 @@ CURRENT_DIR = $(shell pwd)
 ENV_FILE := $(CURRENT_DIR)/.envrc
 
 build-tools: ## Build tools image locally
-	@drone exec .drone.local.yml
+	@drone exec .drone
+
+release:
+	@drone exec --trusted --env-file=.env
 
 help: ## Show this help
 	@echo Please specify a build target. The choices are:
