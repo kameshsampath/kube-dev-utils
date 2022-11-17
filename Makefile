@@ -9,7 +9,7 @@ prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
 	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host
 
 build-tools:	prepare-buildx	## Build tools image locally
-	docker buildx build --builder=$(BUILDER) --output="type=docker" -t $(IMAGE):$(TAG) .
+	docker buildx build --builder=$(BUILDER) --cache-to="type=registry,ref=kameshsampath/kube-dev-tools-cache" --cache-from="type=registry,ref=kameshsampath/kube-dev-tools-cache" --output="type=docker" -t $(IMAGE):$(TAG) -f docker/Dockerfile .
 	
 release:
 	@drone exec --trusted --env-file=.env

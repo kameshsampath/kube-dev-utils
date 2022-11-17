@@ -16,7 +16,7 @@ ARG TAR_FILE="helm-v${HELM_VERSION}-linux-${TARGETARCH}.tar.gz"
 
 RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
 
-RUN apk add --update --no-cache curl ca-certificates bash bash-completion git docker docker-compose direnv wget net-tools tcpdump iputils nmap arp-scan bind-tools  httpie jq yq gettext
+RUN apk add --update --no-cache curl ca-certificates bash bash-completion git docker docker-compose direnv wget net-tools tcpdump iputils nmap arp-scan bind-tools  httpie jq yq gettext go
 
 # add helm
 RUN curl -sL ${BASE_URL}/${TAR_FILE} | tar -xvz && \
