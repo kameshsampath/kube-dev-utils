@@ -42,9 +42,9 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kind/releases/download/${KIND_V
 # Install k3d
 RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
-RUN curl -sSfL "https://github.com/ko-build/ko/releases/download/v${KO_VERSION}/ko_${KO_VERSION}_linux_${TARGETARCH}.tar.gz" > ko.tar.gz \
+RUN curl -sSfL "https://github.com/ko-build/ko/releases/download/v${KO_VERSION}/ko_${KO_VERSION}_Linux_${TARGETARCH}.tar.gz" > ko.tar.gz \
   && tar xzf ko.tar.gz ko \
-  && mv ko /usr/bin/ko && \
+  && mv ko /usr/bin/ko \
   && chmod +x /usr/bin/ko
   
 # knative
