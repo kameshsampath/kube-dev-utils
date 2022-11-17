@@ -3,10 +3,14 @@ TAG?=latest
 SHELL := bash
 CURRENT_DIR = $(shell pwd)
 ENV_FILE := $(CURRENT_DIR)/.envrc
+BUILDER=buildx-multi-arch
 
-build-tools: ## Build tools image locally
-	@drone exec .drone
+prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
+	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host
 
+build-tools:	prepare-buildx	## Build tools image locally
+	docker buildx build --builder=$(BUILDER) --output="type=docker" -t $(IMAGE):$(TAG) .
+	
 release:
 	@drone exec --trusted --env-file=.env
 
