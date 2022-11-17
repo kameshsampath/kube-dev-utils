@@ -15,3 +15,5 @@ steps:
        - latest
       dockerfile: docker/Dockerfile.linux.arm64
       repo: kameshsampath/kube-dev-tools
+      dry_run: true
+      purge: false
