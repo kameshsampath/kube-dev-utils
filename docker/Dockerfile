@@ -6,8 +6,7 @@ ARG HELM_VERSION=3.9.0
 ARG KUBECTL_VERSION=1.24.1
 ARG KUSTOMIZE_VERSION=v4.5.5
 ARG KIND_VERSION=v0.14.0
-ARG KNATIVE_CLIENT_VERSION=v1.6.0
-ARG KNATIVE_QUICKSTART_VERSION=v1.5.1
+ARG CRANE_VERSION=latest
 
 # Install helm (latest release)
 # ARG BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -46,16 +45,6 @@ RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 # Install ko
 RUN apk add ko
 
-# knative
-RUN curl -sLO https://github.com/knative/client/releases/download/knative-${KNATIVE_CLIENT_VERSION}/kn-linux-${TARGETARCH} && \
-    mv kn-linux-${TARGETARCH} /usr/bin/kn && \
-    chmod +x /usr/bin/kn
-
-# knative quickstart
-RUN curl -sLO https://github.com/knative-sandbox/kn-plugin-quickstart/releases/download/knative-${KNATIVE_QUICKSTART_VERSION}/kn-quickstart-linux-${TARGETARCH} && \
-    mv kn-quickstart-linux-${TARGETARCH} /usr/bin/kn-quickstart && \
-    chmod +x /usr/bin/kn-quickstart
-
 # kustomize (latest release)
 RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz && \
     tar xvzf kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz && \
@@ -65,6 +54,9 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
 # Argo CD CLI
 RUN curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 \
    && chmod +x /usr/local/bin/argocd
+
+## Crane
+RUN go install github.com/google/go-containerregistry/cmd/crane@latest
 
 # kubens
 RUN curl -sL -o /usr/local/bin/kubens https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens \
@@ -81,6 +73,7 @@ WORKDIR /apps
 
 RUN mkdir -p /apps/.kube \ 
    && echo 'eval "$(direnv hook bash)"'  >> ~/.bashrc \
-   && printf "'source /usr/share/bash-completion/bash_completion\ncomplete -F __start_kubectl k\nexport do=('--dry-run=client' '-o' 'yaml')\n[ -f /usr/local/.kubectl_aliases ] && source /usr/local/.kubectl_aliases\n" >> ~/.bashrc
+   && printf "source /usr/share/bash-completion/bash_completion\ncomplete -F __start_kubectl k\nexport do=('--dry-run=client' '-o' 'yaml')\n[ -f /usr/local/.kubectl_aliases ] && source /usr/local/.kubectl_aliases\n" >> ~/.bashrc
 
+ENV PATH="${PATH}:${HOME}/go/bin"
 ENV KUBECONFIG=/apps/.kube/config
