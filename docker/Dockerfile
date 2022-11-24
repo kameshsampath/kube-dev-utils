@@ -55,6 +55,9 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
 RUN curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 \
    && chmod +x /usr/local/bin/argocd
 
+## cosign 
+RUN go install github.com/sigstore/cosign/cmd/cosign@latest
+
 ## Crane
 RUN go install github.com/google/go-containerregistry/cmd/crane@latest
 
