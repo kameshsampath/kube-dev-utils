@@ -78,5 +78,5 @@ RUN mkdir -p /apps/.kube \
    && echo 'eval "$(direnv hook bash)"'  >> ~/.bashrc \
    && printf "source /usr/share/bash-completion/bash_completion\ncomplete -F __start_kubectl k\nexport do=('--dry-run=client' '-o' 'yaml')\n[ -f /usr/local/.kubectl_aliases ] && source /usr/local/.kubectl_aliases\n" >> ~/.bashrc
 
-ENV PATH="${PATH}:${HOME}/go/bin"
+ENV PATH="${PATH}:/root/go/bin"
 ENV KUBECONFIG=/apps/.kube/config
