@@ -10,3 +10,6 @@ steps:
     settings:
       dockerfile: docker/Dockerfile
       context: docker
+      platforms:
+        - linux/amd64
+        - linux/arm64
